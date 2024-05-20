@@ -80,4 +80,6 @@ router.get('/profile/updatePassword', async(req,res)=>{
   } 
 })
 
+
+//comment addded for testing purpose
 module.exports=router;
