@@ -6,9 +6,9 @@ const candidateRoutes = require('./routes/candidateRoute');
 const {jwtAuthMiddleware,generateToken} = require('./jwt');
 require('dotenv').config();
 
-const PORT = prcoess.env.PORT || 3000;
 const bodyparser = require('body-parser')
 app.use(bodyparser.json());
+const PORT = process.env.PORT || 3000;
 
 
 app.use('/users',userRoutes);

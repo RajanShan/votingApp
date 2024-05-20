@@ -90,17 +90,22 @@ router.post('/vote/:candidateID', jwtAuthMiddleware, async(req,res)=>{
         }
         let user = await User.findById(userId);
         //wrong userid or user not found in the DB
+        console.log(user+"----------------------------------------------------------");
         if(!user){
             res.status(404).json({ message: 'user not found' });
         }
         //user has already voted
+        console.log(user.isVoted+"----------------------------------------------------------");
         if(user.isVoted){
             res.status(404).json({ message: 'you have already voted' });
+            return;
         }
-
+        
         //Admin cannot vote
+        console.log(user.role+"----------------------------------------------------------");
         if(user.role==='admin'){
             res.status(403).json({ message: 'Admin cannot vote' });
+            return;
         }
         
         Candidate.votes.push({votedBywhom:userId});
