@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 require('dotenv').config();
-
-mongoose.connect("mongodb://localhost:27017/votingApp", {
+const mongoDbOnlineDBHostURL = process.env.MongoDB_URL;
+const mongoDbLocalURL = process.env.MongoDB_URL_Local;
+mongoose.connect(mongoDbOnlineDBHostURL, {
    useNewUrlParser: true,
    useUnifiedTopology: true
 });
