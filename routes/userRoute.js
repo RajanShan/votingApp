@@ -31,9 +31,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).json('Invalid username')
         }
         console.log(foundUserInDB);
-        if (foundUserInDB.password !== password) {
+
+        if (await !foundUserInDB.comparePassword(password)) {
             return res.status(401).json('Invalid password')
         }
+
+        // if (foundUserInDB.password !== password) {
+        //     return res.status(401).json('Invalid password')
+        // }
         const payload = {
             id: foundUserInDB.id
         }
@@ -58,21 +63,29 @@ router.get('/profile', jwtAuthMiddleware, async (req, res) => {
     }
 })
 
-router.get('/profile/updatePassword', async (req, res) => {
+router.put('/profile/updatePassword', jwtAuthMiddleware, async (req, res) => {
     try {
+
         let id = req.user.id;
         let { currPassword, newPassword } = req.body;
 
         let foundUserDataInDB = await user.findById(id);
-        if (foundUserDataInDB.password !== currPassword) {
+        if (await !foundUserDataInDB.comparePassword(currPassword)) {
             return res.status(401).json('Wrong password');
         }
 
+        // if (foundUserDataInDB.password !== currPassword) {
+        //     return res.status(401).json('Wrong password');
+        // }
+
         foundUserDataInDB.password = newPassword;
-        await user.save(foundUserDataInDB);
+        // await user.save();
+
+        let newUser = new user(foundUserDataInDB);
+        let response = await newUser.save();
 
         console.log('Password Updated');
-        res.status(400).json('Password Updated');
+        res.status(400).json({ response: response, message: 'Password Updated' });
 
     } catch (err) {
         console.log('error while updating the database', err);
